@@ -24,7 +24,7 @@ class BlockdagResponse(BaseModel):
     sink: str = Field(..., example="366b1cf51146cc002672b79948634751a2914a2cc9e273afe358bdc1ae19dce9")
 
 
-@app.get("/info/network", response_model=BlockdagResponse, tags=["Kaspa network info"], deprecated=True)
+@app.get("/info/network", response_model=BlockdagResponse, tags=["Karlsen network info"], deprecated=True)
 async def get_network():
     """
     Alias for /info/blockdag
@@ -32,10 +32,10 @@ async def get_network():
     return await get_blockdag()
 
 
-@app.get("/info/blockdag", response_model=BlockdagResponse, tags=["Kaspa network info"])
+@app.get("/info/blockdag", response_model=BlockdagResponse, tags=["Karlsen network info"])
 async def get_blockdag():
     """
-    Get Kaspa BlockDAG information
+    Get Karlsen BlockDAG information
     """
     rpc_client = await kaspad_rpc_client()
     if rpc_client:

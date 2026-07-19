@@ -24,25 +24,25 @@ class TransactionCount(BaseModel):
 
 
 @app.get(
-    "/addresses/{kaspaAddress}/transactions-count",
+    "/addresses/{karlsenAddress}/transactions-count",
     response_model=TransactionCount,
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     openapi_extra={"strict_query_params": True},
 )
 @sql_db_only
 async def get_transaction_count_for_address(
     response: Response,
-    kaspa_address: str = Path(
-        alias="kaspaAddress", description=f"Kaspa address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS
+    karlsen_address: str = Path(
+        alias="karlsenAddress", description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS
     ),
 ):
     """
     Count the number of transactions associated with this address
     """
     try:
-        script = to_script(kaspa_address)
+        script = to_script(karlsen_address)
     except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {kaspa_address}")
+        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsen_address}")
 
     async with async_session() as s:
         global _table_exists
@@ -68,14 +68,14 @@ async def get_transaction_count_for_address(
             if USE_SCRIPT_FOR_ADDRESS:
                 result = await s.execute(select(TxScriptCount.count).filter(TxScriptCount.script_public_key == script))
             else:
-                result = await s.execute(select(TxAddrCount.count).filter(TxAddrCount.address == kaspa_address))
+                result = await s.execute(select(TxAddrCount.count).filter(TxAddrCount.address == karlsen_address))
             tx_count = result.scalar()
             ttl = 4
         else:
             if USE_SCRIPT_FOR_ADDRESS:
                 result = await s.execute(select(func.count()).filter(TxScriptMapping.script_public_key == script))
             else:
-                result = await s.execute(select(func.count()).filter(TxAddrMapping.address == kaspa_address))
+                result = await s.execute(select(func.count()).filter(TxAddrMapping.address == karlsen_address))
             tx_count = result.scalar()
 
             if tx_count >= 1_000_000:

@@ -9,7 +9,7 @@ from kaspad.KaspadRpcClient import kaspad_rpc_client
 from server import app, kaspad_client
 
 
-class KaspadInfoResponse(BaseModel):
+class KarlsendInfoResponse(BaseModel):
     mempoolSize: str = "1"
     serverVersion: str = "0.12.2"
     isUtxoIndexed: bool = True
@@ -17,10 +17,10 @@ class KaspadInfoResponse(BaseModel):
     p2pIdHashed: str = "36a17cd8644eef34fc7fe4719655e06dbdf117008900c46975e66c35acd09b01"
 
 
-@app.get("/info/kaspad", response_model=KaspadInfoResponse, tags=["Kaspa network info"])
-async def get_kaspad_info():
+@app.get("/info/karlsend", response_model=KarlsendInfoResponse, tags=["Karlsen network info"])
+async def get_karlsend_info():
     """
-    Get some information for kaspad instance, which is currently connected.
+    Get some information for karlsend instance, which is currently connected.
     """
     rpc_client = await kaspad_rpc_client()
     if rpc_client:

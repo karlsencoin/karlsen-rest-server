@@ -37,7 +37,7 @@ class AddressesActiveCountResponse(BaseModel):
 @app.get(
     "/addresses/active/count/",
     response_model=AddressesActiveCountResponse,
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     summary="EXPERIMENTAL - EXPECT BREAKING CHANGES: Get the total count of active addresses",
 )
 async def get_addresses_active_count_totals(response: Response):
@@ -85,7 +85,7 @@ async def get_addresses_active_count_totals(response: Response):
 @app.get(
     "/addresses/active/count/{day_or_month}",
     response_model=list[AddressesActiveCountResponse],
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     summary="EXPERIMENTAL - EXPECT BREAKING CHANGES: Get the count of active addresses for a specific UTC day (YYYY-MM-DD) or month (YYYY-MM)",
 )
 async def get_addresses_active_count_for_day(

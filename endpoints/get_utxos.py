@@ -36,24 +36,24 @@ class UtxoResponse(BaseModel):
 
 
 @app.get(
-    "/addresses/{kaspaAddress}/utxos",
+    "/addresses/{karlsenAddress}/utxos",
     response_model=List[UtxoResponse],
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     openapi_extra={"strict_query_params": True},
 )
 async def get_utxos_for_address(
     response: Response,
-    kaspaAddress: str = Path(description=f"Kaspa address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS),
+    karlsenAddress: str = Path(description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS),
 ):
     """
-    Lists all open utxo for a given kaspa address
+    Lists all open utxo for a given karlsen address
     """
     try:
-        to_script(kaspaAddress)
+        to_script(karlsenAddress)
     except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {kaspaAddress}")
+        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsenAddress}")
 
-    utxos = await get_utxos([kaspaAddress])
+    utxos = await get_utxos([karlsenAddress])
 
     ttl = 8
     if len(utxos) > 100_000:
@@ -64,7 +64,7 @@ async def get_utxos_for_address(
         ttl = 20
 
     response.headers["Cache-Control"] = f"public, max-age={ttl}"
-    return (utxo for utxo in utxos if utxo["address"] == kaspaAddress)
+    return (utxo for utxo in utxos if utxo["address"] == karlsenAddress)
 
 
 class UtxoRequest(BaseModel):
@@ -74,23 +74,23 @@ class UtxoRequest(BaseModel):
 @app.post(
     "/addresses/utxos",
     response_model=List[UtxoResponse],
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     openapi_extra={"strict_query_params": True},
 )
 async def get_utxos_for_addresses(body: UtxoRequest):
     """
-    Lists all open utxo for a given kaspa address
+    Lists all open utxo for a given karlsen address
     """
     if body.addresses is None:
         return []
 
-    for kaspaAddress in body.addresses:
+    for karlsenAddress in body.addresses:
         try:
-            if not re.search(REGEX_KASPA_ADDRESS, kaspaAddress):
+            if not re.search(REGEX_KASPA_ADDRESS, karlsenAddress):
                 raise ValueError
-            to_script(kaspaAddress)
+            to_script(karlsenAddress)
         except ValueError:
-            raise HTTPException(status_code=400, detail=f"Invalid address: {kaspaAddress}")
+            raise HTTPException(status_code=400, detail=f"Invalid address: {karlsenAddress}")
 
     return await get_utxos(body.addresses)
 

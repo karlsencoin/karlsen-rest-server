@@ -22,7 +22,7 @@ from server import app, kaspad_client
 _logger = logging.getLogger(__name__)
 
 
-class KaspadResponse(BaseModel):
+class KarlsendResponse(BaseModel):
     kaspadHost: str | None
     serverVersion: str = "0.12.6"
     isUtxoIndexed: bool = True
@@ -40,11 +40,11 @@ class DBCheckStatus(BaseModel):
 
 
 class HealthResponse(BaseModel):
-    kaspadServers: List[KaspadResponse]
+    kaspadServers: List[KarlsendResponse]
     database: DBCheckStatus
 
 
-@app.get("/info/health", response_model=HealthResponse, tags=["Kaspa network info"])
+@app.get("/info/health", response_model=HealthResponse, tags=["Karlsen network info"])
 async def health_state():
     """
     Checks node and database health by comparing blue score and sync status.

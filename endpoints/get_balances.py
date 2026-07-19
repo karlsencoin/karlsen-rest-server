@@ -20,19 +20,19 @@ class BalanceRequest(BaseModel):
     addresses: list[str] = [ADDRESS_EXAMPLE]
 
 
-@app.post("/addresses/balances", response_model=List[BalancesByAddressEntry], tags=["Kaspa addresses"])
-async def get_balances_from_kaspa_addresses(body: BalanceRequest):
+@app.post("/addresses/balances", response_model=List[BalancesByAddressEntry], tags=["Karlsen addresses"])
+async def get_balances_from_karlsen_addresses(body: BalanceRequest):
     """
-    Get balances for multiple kaspa addresses
+    Get balances for multiple karlsen addresses
     """
     if not body.addresses:
         return []
 
-    for kaspaAddress in body.addresses:
+    for karlsenAddress in body.addresses:
         try:
-            to_script(kaspaAddress)
+            to_script(karlsenAddress)
         except ValueError:
-            raise HTTPException(status_code=400, detail=f"Invalid address: {kaspaAddress}")
+            raise HTTPException(status_code=400, detail=f"Invalid address: {karlsenAddress}")
 
     rpc_client = await kaspad_rpc_client()
     request = {"addresses": body.addresses}

@@ -15,7 +15,7 @@ class CoinSupplyResponse(BaseModel):
     maxSupply: str = "2900000000000000000"
 
 
-@app.get("/info/coinsupply", response_model=CoinSupplyResponse, tags=["Kaspa network info"])
+@app.get("/info/coinsupply", response_model=CoinSupplyResponse, tags=["Karlsen network info"])
 async def get_coinsupply():
     """
     Get $KAS coin supply information
@@ -35,7 +35,7 @@ async def get_coinsupply():
     }
 
 
-@app.get("/info/coinsupply/circulating", tags=["Kaspa network info"], response_class=PlainTextResponse)
+@app.get("/info/coinsupply/circulating", tags=["Karlsen network info"], response_class=PlainTextResponse)
 async def get_circulating_coins(in_billion: bool = False):
     """
     Get circulating amount of $KAS token as numerical value
@@ -48,7 +48,7 @@ async def get_circulating_coins(in_billion: bool = False):
         return coins
 
 
-@app.get("/info/coinsupply/total", tags=["Kaspa network info"], response_class=PlainTextResponse)
+@app.get("/info/coinsupply/total", tags=["Karlsen network info"], response_class=PlainTextResponse)
 async def get_total_coins(in_billion: bool = False):
     """
     Get total amount of $KAS token as numerical value

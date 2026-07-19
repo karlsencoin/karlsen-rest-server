@@ -43,17 +43,17 @@ class TransactionForAddressResponse(BaseModel):
 
 
 @app.get(
-    "/addresses/{kaspaAddress}/full-transactions",
+    "/addresses/{karlsenAddress}/full-transactions",
     response_model=List[TxModel],
     response_model_exclude_unset=True,
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     openapi_extra={"strict_query_params": True},
 )
 @sql_db_only
 async def get_full_transactions_for_address(
     response: Response,
-    kaspa_address: str = Path(
-        alias="kaspaAddress", description=f"Kaspa address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS
+    karlsen_address: str = Path(
+        alias="karlsenAddress", description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS
     ),
     limit: int = Query(description="The number of records to get", ge=1, le=500, default=50),
     offset: int = Query(description="The offset from which to get records", ge=0, default=0),
@@ -65,9 +65,9 @@ async def get_full_transactions_for_address(
     And then get their related full transaction data
     """
     try:
-        script = to_script(kaspa_address)
+        script = to_script(karlsen_address)
     except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {kaspa_address}")
+        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsen_address}")
 
     async with async_session() as s:
         if USE_SCRIPT_FOR_ADDRESS:
@@ -81,7 +81,7 @@ async def get_full_transactions_for_address(
         else:
             tx_within_limit_offset = await s.execute(
                 select(TxAddrMapping.transaction_id, TxAddrMapping.block_time)
-                .filter(TxAddrMapping.address == kaspa_address)
+                .filter(TxAddrMapping.address == karlsen_address)
                 .limit(limit)
                 .offset(offset)
                 .order_by(TxAddrMapping.block_time.desc())
@@ -112,17 +112,17 @@ async def get_full_transactions_for_address(
 
 
 @app.get(
-    "/addresses/{kaspaAddress}/full-transactions-page",
+    "/addresses/{karlsenAddress}/full-transactions-page",
     response_model=List[TxModel],
     response_model_exclude_unset=True,
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     openapi_extra={"strict_query_params": True},
 )
 @sql_db_only
 async def get_full_transactions_for_address_page(
     response: Response,
-    kaspa_address: str = Path(
-        alias="kaspaAddress", description=f"Kaspa address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS
+    karlsen_address: str = Path(
+        alias="karlsenAddress", description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS
     ),
     limit: int = Query(
         description="The max number of records to get. "
@@ -148,9 +148,9 @@ async def get_full_transactions_for_address_page(
     And then get their related full transaction data
     """
     try:
-        script = to_script(kaspa_address)
+        script = to_script(karlsen_address)
     except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {kaspa_address}")
+        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsen_address}")
 
     if USE_SCRIPT_FOR_ADDRESS:
         query = (
@@ -161,7 +161,7 @@ async def get_full_transactions_for_address_page(
     else:
         query = (
             select(TxAddrMapping.transaction_id, TxAddrMapping.block_time)
-            .filter(TxAddrMapping.address == kaspa_address)
+            .filter(TxAddrMapping.address == karlsen_address)
             .limit(limit)
         )
 
@@ -225,7 +225,7 @@ async def get_full_transactions_for_address_page(
             else:
                 tx_with_same_block_time = await s.execute(
                     select(TxAddrMapping.transaction_id)
-                    .filter(TxAddrMapping.address == kaspa_address)
+                    .filter(TxAddrMapping.address == karlsen_address)
                     .filter(
                         or_(
                             TxAddrMapping.block_time == newest_block_time, TxAddrMapping.block_time == oldest_block_time
@@ -249,7 +249,7 @@ async def get_full_transactions_for_address_page(
                 has_newer = await s.scalar(
                     select(
                         exists().where(
-                            (TxAddrMapping.address == kaspa_address) & (TxAddrMapping.block_time > newest_block_time)
+                            (TxAddrMapping.address == karlsen_address) & (TxAddrMapping.block_time > newest_block_time)
                         )
                     )
                 )
@@ -270,7 +270,7 @@ async def get_full_transactions_for_address_page(
                 has_older = await s.scalar(
                     select(
                         exists().where(
-                            (TxAddrMapping.address == kaspa_address) & (TxAddrMapping.block_time < oldest_block_time)
+                            (TxAddrMapping.address == karlsen_address) & (TxAddrMapping.block_time < oldest_block_time)
                         )
                     )
                 )

@@ -35,7 +35,7 @@ class TransactionCountResponse(BaseModel):
 @app.get(
     "/transactions/count/",
     response_model=TransactionCountResponse,
-    tags=["Kaspa transactions"],
+    tags=["Karlsen transactions"],
     summary="EXPERIMENTAL - EXPECT BREAKING CHANGES: Get the sum of accepted transactions",
 )
 async def get_transaction_count_totals(response: Response):
@@ -67,7 +67,7 @@ async def get_transaction_count_totals(response: Response):
 @app.get(
     "/transactions/count/{day_or_month}",
     response_model=list[TransactionCountResponse],
-    tags=["Kaspa transactions"],
+    tags=["Karlsen transactions"],
     summary="EXPERIMENTAL - EXPECT BREAKING CHANGES: Get the number of accepted transactions for a specific UTC day (YYYY-MM-DD) or month (YYYY-MM)",
 )
 async def get_transaction_count_for_day(response: Response, day_or_month: str = Path(pattern=REGEX_DATE_OPTIONAL_DAY)):

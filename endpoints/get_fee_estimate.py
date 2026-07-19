@@ -20,10 +20,10 @@ class FeeEstimateResponse(BaseModel):
     lowBuckets: List[FeeEstimateBucket]
 
 
-@app.get("/info/fee-estimate", response_model=FeeEstimateResponse, tags=["Kaspa network info"])
+@app.get("/info/fee-estimate", response_model=FeeEstimateResponse, tags=["Karlsen network info"])
 async def get_fee_estimate():
     """
-    Get fee estimate from Kaspad.
+    Get fee estimate from Karlsend.
 
     For all buckets, feerate values represent fee/mass of a transaction in `sompi/gram` units.<br>
     Given a feerate value recommendation, calculate the required fee by

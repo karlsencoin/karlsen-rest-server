@@ -44,7 +44,7 @@ _sample_interval_minutes = 15
 @app.get(
     "/info/hashrate/history/{day_or_month}",
     response_model=list[HashrateHistoryResponse],
-    tags=["Kaspa network info"],
+    tags=["Karlsen network info"],
 )
 async def get_hashrate_history_for_day_or_month(
     response: Response,
@@ -101,7 +101,7 @@ async def get_hashrate_history_for_day_or_month(
         return filter_samples(samples, sample_interval)
 
 
-@app.get("/info/hashrate/history", response_model=list[HashrateHistoryResponse], tags=["Kaspa network info"])
+@app.get("/info/hashrate/history", response_model=list[HashrateHistoryResponse], tags=["Karlsen network info"])
 async def get_hashrate_history(
     response: Response, resolution: Optional[str] = Query(default=None, enum=["15m", "1h", "3h", "1d", "7d"])
 ):

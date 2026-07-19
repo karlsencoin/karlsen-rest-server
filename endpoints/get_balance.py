@@ -34,20 +34,20 @@ class BalanceResponse(BaseModel):
     balance: int = 38240000000
 
 
-@app.get("/addresses/{kaspaAddress}/balance", response_model=BalanceResponse, tags=["Kaspa addresses"])
-async def get_balance_from_kaspa_address(
-    kaspaAddress: str = Path(description=f"Kaspa address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS),
+@app.get("/addresses/{karlsenAddress}/balance", response_model=BalanceResponse, tags=["Karlsen addresses"])
+async def get_balance_from_karlsen_address(
+    karlsenAddress: str = Path(description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS),
 ):
     """
-    Get balance for a given kaspa address
+    Get balance for a given karlsen address
     """
     try:
-        to_script(kaspaAddress)
+        to_script(karlsenAddress)
     except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {kaspaAddress}")
+        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsenAddress}")
 
     rpc_client = await kaspad_rpc_client()
-    request = {"address": kaspaAddress}
+    request = {"address": karlsenAddress}
     if rpc_client:
         balance = await wait_for(rpc_client.get_balance_by_address(request), 10)
     else:
@@ -56,7 +56,7 @@ async def get_balance_from_kaspa_address(
             raise HTTPException(500, resp["error"])
         balance = resp["getBalanceByAddressResponse"]
 
-    return {"address": kaspaAddress, "balance": balance["balance"]}
+    return {"address": karlsenAddress, "balance": balance["balance"]}
 
 
 class AddressBalanceHistory(BaseModel):
@@ -65,25 +65,25 @@ class AddressBalanceHistory(BaseModel):
 
 
 @app.get(
-    "/addresses/{kaspaAddress}/balance/{day_or_month}",
+    "/addresses/{karlsenAddress}/balance/{day_or_month}",
     response_model=List[AddressBalanceHistory],
-    tags=["Kaspa addresses"],
-    summary="EXPERIMENTAL - EXPECT BREAKING CHANGES: Get balance history for Kaspa addresses",
+    tags=["Karlsen addresses"],
+    summary="EXPERIMENTAL - EXPECT BREAKING CHANGES: Get balance history for Karlsen addresses",
     description="Get balance history for address, only available for larger addresses.",
     openapi_extra={"strict_query_params": True},
 )
 @sql_db_only
-async def get_balance_history_for_kaspa_address(
+async def get_balance_history_for_karlsen_address(
     response: Response,
-    kaspaAddress: str = Path(description=f"Kaspa address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS),
+    karlsenAddress: str = Path(description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS),
     day_or_month: str = Path(pattern=REGEX_DATE_OPTIONAL_DAY),
 ):
     if not ADDRESS_RANKINGS:
         raise HTTPException(status_code=503, detail="Balance history is disabled")
     try:
-        script = to_script(kaspaAddress)
+        script = to_script(karlsenAddress)
     except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {kaspaAddress}")
+        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsenAddress}")
 
     now = datetime.now(tz=timezone.utc)
     now_ms = now.timestamp() * 1000

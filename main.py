@@ -10,7 +10,7 @@ from endpoints import (
     get_blocks,
     get_blockdag,
     get_circulating_supply,
-    get_kaspad_info,
+    get_karlsend_info,
     get_fee_estimate,
     get_price,
 )
@@ -21,7 +21,7 @@ from endpoints.get_address_top import get_addresses_top
 from endpoints.get_address_transactions import get_full_transactions_for_address_page
 from endpoints.get_address_transactions_count import get_transaction_count_for_address
 from endpoints.get_addresses_active_count import get_addresses_active_count_totals
-from endpoints.get_balances import get_balances_from_kaspa_addresses
+from endpoints.get_balances import get_balances_from_karlsen_addresses
 from endpoints.get_blockreward import get_blockreward
 from endpoints.get_halving import get_halving
 from endpoints.get_hashrate import (
@@ -50,12 +50,12 @@ IS_SQL_DB_CONFIGURED = os.getenv("SQL_URI") is not None
 
 print(
     f"Loaded: {get_balance} {get_utxos} {get_blocks} {get_blockdag} {get_circulating_supply} {get_distribution_tiers}"
-    f"{get_kaspad_info} {get_fee_estimate} {get_marketcap} {get_blockreward} {get_halving} {get_hashrate_history} {get_hashrate}"
+    f"{get_karlsend_info} {get_fee_estimate} {get_marketcap} {get_blockreward} {get_halving} {get_hashrate_history} {get_hashrate}"
     f"{health_state} {get_transaction} {get_virtual_chain_transactions} {get_full_transactions_for_address_page}"
     f"{get_virtual_selected_parent_blue_score} {get_addresses_active} {get_addresses_names} {get_addresses_top}"
-    f"{submit_a_new_transaction} {calculate_transaction_mass} {get_price} {get_balances_from_kaspa_addresses}"
+    f"{submit_a_new_transaction} {calculate_transaction_mass} {get_price} {get_balances_from_karlsen_addresses}"
     f"{get_transaction_count_for_address} {get_transaction_count_for_day} {get_addresses_active_count_totals}"
-    f"{submit_a_new_transaction} {get_price} {get_balances_from_kaspa_addresses} {calculate_transaction_mass}"
+    f"{submit_a_new_transaction} {get_price} {get_balances_from_karlsen_addresses} {calculate_transaction_mass}"
     f"{get_transaction_count_for_address}"
 )
 

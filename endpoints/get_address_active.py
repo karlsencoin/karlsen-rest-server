@@ -29,7 +29,7 @@ class AddressesActiveResponse(BaseModel):
     "/addresses/active",
     response_model=List[AddressesActiveResponse],
     response_model_exclude_unset=True,
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     openapi_extra={"strict_query_params": True},
 )
 @sql_db_only

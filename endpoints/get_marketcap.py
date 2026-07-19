@@ -11,7 +11,7 @@ class MarketCapResponse(BaseModel):
     marketcap: int = 12000132
 
 
-@app.get("/info/marketcap", response_model=MarketCapResponse | str, tags=["Kaspa network info"])
+@app.get("/info/marketcap", response_model=MarketCapResponse | str, tags=["Karlsen network info"])
 async def get_marketcap(stringOnly: bool = False):
     """
     Get $KAS price and market cap. Price info is from coingecko.com

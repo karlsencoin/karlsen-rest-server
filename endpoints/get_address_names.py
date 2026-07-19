@@ -22,7 +22,7 @@ class AddressName(BaseModel):
 @app.get(
     "/addresses/names",
     response_model=List[AddressName],
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     openapi_extra={"strict_query_params": True},
 )
 @sql_db_only
@@ -37,17 +37,17 @@ async def get_addresses_names(response: Response):
 
 
 @app.get(
-    "/addresses/{kaspaAddress}/name",
+    "/addresses/{karlsenAddress}/name",
     response_model=AddressName | None,
-    tags=["Kaspa addresses"],
+    tags=["Karlsen addresses"],
     openapi_extra={"strict_query_params": True},
 )
 @sql_db_only
 async def get_name_for_address(
     response: Response,
-    kaspa_address: str = Path(
-        alias="kaspaAddress",
-        description="Kaspa address as string e.g. kaspa:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkx9awp4e",
+    karlsen_address: str = Path(
+        alias="karlsenAddress",
+        description="Karlsen address as string e.g. karlsen:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkx9awp4e",
         regex=REGEX_KASPA_ADDRESS,
     ),
 ):
@@ -55,12 +55,12 @@ async def get_name_for_address(
     Get the name for an address
     """
     try:
-        to_script(kaspa_address)
+        to_script(karlsen_address)
     except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {kaspa_address}")
+        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsen_address}")
 
     async with async_session() as s:
-        r = (await s.execute(select(AddressKnown).filter(AddressKnown.address == kaspa_address))).first()
+        r = (await s.execute(select(AddressKnown).filter(AddressKnown.address == karlsen_address))).first()
 
     response.headers["Cache-Control"] = "public, max-age=600"
     if r:
