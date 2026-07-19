@@ -20,7 +20,7 @@ class AddressesActiveRequest(BaseModel):
 
 
 class AddressesActiveResponse(BaseModel):
-    address: str = Field(example="kaspa:qqkqkzjvr7zwxxmjxjkmxxdwju9kjs6e9u82uh59z07vgaks6gg62v8707g73")
+    address: str = Field(example="karlsen:qqkqkzjvr7zwxxmjxjkmxxdwju9kjs6e9u82uh59z07vgaks6gg62v8707g73")
     active: bool = Field(example=True)
     lastTxBlockTime: int | None = Field(example=1752924174352)
 

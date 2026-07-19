@@ -27,8 +27,8 @@ DEFAULT_CRESCENDO_BS = 0
 
 match NETWORK_TYPE:
     case "mainnet":
-        address_prefix = "kaspa"
-        address_example = "kaspa:qqkqkzjvr7zwxxmjxjkmxxdwju9kjs6e9u82uh59z07vgaks6gg62v8707g73"
+        address_prefix = "karlsen"
+        address_example = "karlsen:qqkqkzjvr7zwxxmjxjkmxxdwju9kjs6e9u82uh59z07vgaks6gg62v8707g73"
         max_supply = MAINNET_MAX_SUPPLY_KAS
         crescendo_bs = MAINNET_CRESCENDO_BS
     case "testnet":
