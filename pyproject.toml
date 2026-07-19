@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "kaspa-rest-server"
+name = "karlsen-rest-server"
 version = "0.0.32"
-description = ""
+description = "REST API server for the Karlsen blockchain (fork of kaspa-ng/kaspa-rest-server)"
 authors = ["lAmeR1 <lamer1@github.com>"]
 license = "MIT"
 readme = "README.md"
