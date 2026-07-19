@@ -1,8 +1,8 @@
-# kaspa-rest-server
-REST API server for Kaspa written in Python.  
+# karlsen-rest-server
+REST API server for Karlsen written in Python. Fork of [kaspa-ng/kaspa-rest-server](https://github.com/kaspa-ng/kaspa-rest-server).  
 
-The rest server is designed to operate on the database populated by the [simply-kaspa-indexer](https://github.com/supertypo/simply-kaspa-indexer).  
-The latest version of the rest server will always be live here: https://api.kaspa.org  
+The rest server is designed to operate on the database populated by the [karlsen-indexer](https://github.com/karlsencoin/karlsen-indexer).  
+The latest version of the rest server will always be live here: https://api-v2.karlsencoin.org  
 
 ## Build and run
 Any third party integrator which depends on the api should make sure to run their own instance.
@@ -23,14 +23,14 @@ poetry run gunicorn -b 0.0.0.0:8000 -w 4 -k uvicorn.workers.UvicornWorker main:a
 
 ### Environment variables
 
-* KASPAD_WRPC_URL - ws(s)://host:port (wrpc) to a kaspa node, use 'resolver' to use the Kaspa PNN. (default: none)
-* KASPAD_HOST1 - host:port (grpc) to a kaspa node, multiple nodes is supported. (default: none)
+* KASPAD_WRPC_URL - ws(s)://host:port (wrpc) to a karlsend node. (default: none)
+* KASPAD_HOST1 - host:port (grpc) to a karlsend node, multiple nodes is supported. (default: none)
 * SQL_URI - uri to a postgres db (default: postgresql+psycopg://127.0.0.1:5432)
 * SQL_URI_BLOCKS - uri to a postgres db to query for blocks, block_parent and blocks_transactions (default: SQL_URI)
 * SQL_POOL_SIZE - postgres db pool size (default: 15)
 * SQL_POOL_MAX_OVERFLOW - postgres db pool max overflow (default: 0)
 * SQL_POOL_RECYCLE_SECONDS - postgres db connection ttl (default: 1200)
-* HEALTH_TOLERANCE_DOWN - How many seconds behind kaspad the db can be before /info/health reports DOWN (default: 300)
+* HEALTH_TOLERANCE_DOWN - How many seconds behind karlsend the db can be before /info/health reports DOWN (default: 300)
 * NETWORK_TYPE - mainnet/testnet/simnet/devnet (default: mainnet)
 * BPS - Blocks per second, affects block difficulty/hashrate calculation (default: 10)
 * DISABLE_PRICE - If true /info/price and /info/market-data is disabled (default: false)
