@@ -27,9 +27,10 @@ fastapi.logger.logger.setLevel(logging.WARNING)
 _logger = logging.getLogger(__name__)
 
 app = FastAPI(
-    title="Kaspa REST-API server",
-    description="REST-API server supporting block, tx and address search, using Kaspad and the indexer db.\n\n"
-    "[https://github.com/kaspa-ng/kaspa-rest-server](https://github.com/kaspa-ng/kaspa-rest-server)",
+    title="Karlsen REST-API server",
+    description="REST-API server supporting block, tx and address search, using Karlsend and the indexer db.\n\n"
+    "[https://github.com/karlsencoin/karlsen-rest-server](https://github.com/karlsencoin/karlsen-rest-server) "
+    "(fork of [kaspa-ng/kaspa-rest-server](https://github.com/kaspa-ng/kaspa-rest-server))",
     version=os.getenv("VERSION") or "dev",
     contact={"name": "lAmeR1 / supertypo"},
     license_info={"name": "MIT LICENSE"},
