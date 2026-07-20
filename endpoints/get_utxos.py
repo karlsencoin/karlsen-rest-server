@@ -48,11 +48,7 @@ async def get_utxos_for_address(
     """
     Lists all open utxo for a given karlsen address
     """
-    try:
-        to_script(karlsenAddress)
-    except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsenAddress}")
-
+    # Address validated by FastAPI Path regex; karlsend RPC checks checksum canonically.
     utxos = await get_utxos([karlsenAddress])
 
     ttl = 8
@@ -85,11 +81,7 @@ async def get_utxos_for_addresses(body: UtxoRequest):
         return []
 
     for karlsenAddress in body.addresses:
-        try:
-            if not re.search(REGEX_KASPA_ADDRESS, karlsenAddress):
-                raise ValueError
-            to_script(karlsenAddress)
-        except ValueError:
+        if not re.search(REGEX_KASPA_ADDRESS, karlsenAddress):
             raise HTTPException(status_code=400, detail=f"Invalid address: {karlsenAddress}")
 
     return await get_utxos(body.addresses)

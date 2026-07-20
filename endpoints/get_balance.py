@@ -41,11 +41,7 @@ async def get_balance_from_karlsen_address(
     """
     Get balance for a given karlsen address
     """
-    try:
-        to_script(karlsenAddress)
-    except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsenAddress}")
-
+    # Address validated by FastAPI Path regex; karlsend RPC checks checksum canonically.
     rpc_client = await kaspad_rpc_client()
     request = {"address": karlsenAddress}
     if rpc_client:

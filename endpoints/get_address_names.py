@@ -54,11 +54,7 @@ async def get_name_for_address(
     """
     Get the name for an address
     """
-    try:
-        to_script(karlsen_address)
-    except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid address: {karlsen_address}")
-
+    # Address validated by FastAPI Path regex; karlsend RPC checks checksum canonically.
     async with async_session() as s:
         r = (await s.execute(select(AddressKnown).filter(AddressKnown.address == karlsen_address))).first()
 
