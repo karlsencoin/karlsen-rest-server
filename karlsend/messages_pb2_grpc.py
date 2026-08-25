@@ -106,6 +106,11 @@ class RPC(object):
         )
 
 # Karlsen aliases — note: gRPC method paths remain /protowire.KaspadDaemon/... (wire format)
-KarlsendDaemonStub = KaspadDaemonStub
-KarlsendDaemonServicer = KaspadDaemonServicer
-add_KarlsendDaemonServicer_to_server = add_KaspadDaemonServicer_to_server
+# Chain: RPCStub/Servicer -> KarlsendDaemon* -> KaspadDaemon* (compat)
+KarlsendDaemonStub = RPCStub
+KarlsendDaemonServicer = RPCServicer
+add_KarlsendDaemonServicer_to_server = add_RPCServicer_to_server
+
+KaspadDaemonStub = KarlsendDaemonStub
+KaspadDaemonServicer = KarlsendDaemonServicer
+add_KaspadDaemonServicer_to_server = add_KarlsendDaemonServicer_to_server
