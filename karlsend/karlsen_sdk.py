@@ -13,3 +13,12 @@ from kaspa import (
 # kaspa_script_address is a low-level C extension; re-export here so application
 # code never imports it directly.
 from kaspa_script_address import to_address, to_script
+
+# Transaction-related types — required by submit_transaction_request.py
+from kaspa import (
+    Transaction,
+    TransactionInput,
+    TransactionOutpoint,
+    TransactionOutput,
+    Hash,
+)
