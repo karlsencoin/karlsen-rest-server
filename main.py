@@ -47,6 +47,7 @@ from endpoints.karlsend_requests.submit_transaction_request import (
 )
 from endpoints.get_market_data import get_market_data
 from endpoints.get_dag_window import get_dag_window, dag_window_background_loop
+from endpoints.get_miners import miners_top, miners_network, miner_detail
 from helper import get_kas_market_data
 from karlsend.KarlsendRpcClient import karlsend_rpc_client
 from server import app, karlsend_client
@@ -61,7 +62,7 @@ print(
     f"{submit_a_new_transaction} {calculate_transaction_mass} {get_price} {get_balances_from_karlsen_addresses}"
     f"{get_transaction_count_for_address} {get_transaction_count_for_day} {get_addresses_active_count_totals}"
     f"{submit_a_new_transaction} {get_price} {get_balances_from_karlsen_addresses} {calculate_transaction_mass}"
-    f"{get_transaction_count_for_address} {get_analytics_distribution_summary} {get_analytics_top_addresses} {get_analytics_total_addresses} {get_analytics_address_distribution} {get_analytics_address_range} {get_market_data} {get_dag_window}"
+    f"{get_transaction_count_for_address} {get_analytics_distribution_summary} {get_analytics_top_addresses} {get_analytics_total_addresses} {get_analytics_address_distribution} {get_analytics_address_range} {get_market_data} {get_dag_window} {miners_top} {miners_network} {miner_detail}"
 )
 
 if os.getenv("VSPC_REQUEST") == "true":
