@@ -39,6 +39,7 @@ from endpoints.get_virtual_chain import get_virtual_chain_transactions
 from endpoints.get_virtual_chain_blue_score import (
     get_virtual_selected_parent_blue_score,
 )
+from endpoints.get_analytics_distribution_summary import get_analytics_distribution_summary
 from endpoints.karlsend_requests.submit_transaction_request import (
     submit_a_new_transaction,
 )
@@ -56,7 +57,7 @@ print(
     f"{submit_a_new_transaction} {calculate_transaction_mass} {get_price} {get_balances_from_karlsen_addresses}"
     f"{get_transaction_count_for_address} {get_transaction_count_for_day} {get_addresses_active_count_totals}"
     f"{submit_a_new_transaction} {get_price} {get_balances_from_karlsen_addresses} {calculate_transaction_mass}"
-    f"{get_transaction_count_for_address}"
+    f"{get_transaction_count_for_address} {get_analytics_distribution_summary}"
 )
 
 if os.getenv("VSPC_REQUEST") == "true":
