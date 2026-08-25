@@ -10,7 +10,7 @@ from constants import BPS
 from dbsession import async_session_blocks
 from endpoints import sql_db_only
 from endpoints.get_blockdag import get_blockdag
-from endpoints.get_blocks import get_block_from_kaspad
+from endpoints.get_blocks import get_block_from_karlsend
 from helper import KeyValueStore
 from helper.difficulty_calculation import bits_to_difficulty
 from models.Block import Block
@@ -94,10 +94,10 @@ async def get_max_hashrate():
     else:
         bdi = await get_blockdag()
         block_hash = bdi["virtualParentHashes"][0]
-        block = await get_block_from_kaspad(block_hash, False, False)
+        block = await get_block_from_karlsend(block_hash, False, False)
         block_difficulty = int(block.get("verboseData", {}).get("difficulty", 0))
         hashrate_new = block_difficulty * 2 * BPS
-        logging.debug(f"hashrate_new (kaspad): {int(hashrate_new)}")
+        logging.debug(f"hashrate_new (karlsend): {int(hashrate_new)}")
         if hashrate_new > hashrate_old:
             response = {
                 "hashrate": hashrate_new / 1_000_000_000_000,

@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 
 from endpoints.get_transactions import search_for_transactions, TxSearch
-from endpoints.kaspad_requests.submit_transaction_request import SubmitTxModel
+from endpoints.karlsend_requests.submit_transaction_request import SubmitTxModel
 from helper.mass_calculation_compute import calc_compute_mass
 from helper.mass_calculation_storage import calc_storage_mass
 from server import app

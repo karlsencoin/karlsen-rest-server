@@ -14,7 +14,7 @@ from starlette.responses import Response
 
 from constants import (
     ADDRESS_EXAMPLE,
-    REGEX_KASPA_ADDRESS,
+    REGEX_KARLSEN_ADDRESS,
     ADDRESS_RANKINGS,
     REGEX_DATE_OPTIONAL_DAY,
     GENESIS_START_OF_DAY_MS,
@@ -24,9 +24,9 @@ from constants import (
 )
 from dbsession import async_session_blocks
 from endpoints import sql_db_only
-from kaspad.KaspadRpcClient import kaspad_rpc_client
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
 from models.TopScript import TopScript
-from server import app, kaspad_client
+from server import app, karlsend_client
 
 
 class BalanceResponse(BaseModel):
@@ -36,18 +36,18 @@ class BalanceResponse(BaseModel):
 
 @app.get("/addresses/{karlsenAddress}/balance", response_model=BalanceResponse, tags=["Karlsen addresses"])
 async def get_balance_from_karlsen_address(
-    karlsenAddress: str = Path(description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS),
+    karlsenAddress: str = Path(description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KARLSEN_ADDRESS),
 ):
     """
     Get balance for a given karlsen address
     """
     # Address validated by FastAPI Path regex; karlsend RPC checks checksum canonically.
-    rpc_client = await kaspad_rpc_client()
+    rpc_client = await karlsend_rpc_client()
     request = {"address": karlsenAddress}
     if rpc_client:
         balance = await wait_for(rpc_client.get_balance_by_address(request), 10)
     else:
-        resp = await kaspad_client.request("getBalanceByAddressRequest", request)
+        resp = await karlsend_client.request("getBalanceByAddressRequest", request)
         if resp.get("error"):
             raise HTTPException(500, resp["error"])
         balance = resp["getBalanceByAddressResponse"]
@@ -71,7 +71,7 @@ class AddressBalanceHistory(BaseModel):
 @sql_db_only
 async def get_balance_history_for_karlsen_address(
     response: Response,
-    karlsenAddress: str = Path(description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS),
+    karlsenAddress: str = Path(description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KARLSEN_ADDRESS),
     day_or_month: str = Path(pattern=REGEX_DATE_OPTIONAL_DAY),
 ):
     if not ADDRESS_RANKINGS:

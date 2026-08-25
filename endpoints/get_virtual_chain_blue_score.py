@@ -6,8 +6,8 @@ from asyncio import wait_for
 from fastapi import HTTPException
 from pydantic import BaseModel
 
-from kaspad.KaspadRpcClient import kaspad_rpc_client
-from server import app, kaspad_client
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
+from server import app, karlsend_client
 
 _logger = logging.getLogger(__name__)
 current_blue_score_data = {"blue_score": 0}
@@ -22,11 +22,11 @@ async def get_virtual_selected_parent_blue_score():
     """
     Returns the blue score of the sink
     """
-    rpc_client = await kaspad_rpc_client()
+    rpc_client = await karlsend_rpc_client()
     if rpc_client:
         return await wait_for(rpc_client.get_sink_blue_score(), 10)
     else:
-        resp = await kaspad_client.request("getSinkBlueScoreRequest")
+        resp = await karlsend_client.request("getSinkBlueScoreRequest")
         if resp.get("error"):
             raise HTTPException(500, resp["error"])
         return resp["getSinkBlueScoreResponse"]

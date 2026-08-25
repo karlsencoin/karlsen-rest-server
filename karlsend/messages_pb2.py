@@ -48,3 +48,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
     _globals["_RPC"]._serialized_start = 9232
     _globals["_RPC"]._serialized_end = 9313
 # @@protoc_insertion_point(module_scope)
+
+# Karlsen aliases — Python-level only; binary wire format is field-number based, unchanged
+KarlsendMessage = KaspadMessage
+KarlsendRequest = KaspadRequest
+KarlsendResponse = KaspadResponse

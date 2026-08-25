@@ -15,7 +15,7 @@ from endpoints.get_virtual_chain_blue_score import current_blue_score_data
 from helper.difficulty_calculation import bits_to_difficulty
 from helper.mining_address import get_miner_payload_from_block, retrieve_miner_info_from_payload
 from helper.utils import add_cache_control
-from kaspad.KaspadRpcClient import kaspad_rpc_client
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
 from models.Block import Block
 from models.BlockParent import BlockParent
 from models.BlockTransaction import BlockTransaction
@@ -23,7 +23,7 @@ from models.Subnetwork import Subnetwork
 from models.Transaction import Transaction
 
 from models.TransactionAcceptance import TransactionAcceptance
-from server import app, kaspad_client
+from server import app, karlsend_client
 
 _logger = logging.getLogger(__name__)
 
@@ -142,7 +142,7 @@ async def get_block(
     """
     Get block information for a given block id
     """
-    block = await get_block_from_kaspad(blockId, includeTransactions, includeColor)
+    block = await get_block_from_karlsend(blockId, includeTransactions, includeColor)
     if not block and IS_SQL_DB_CONFIGURED:
         response.headers["X-Data-Source"] = "Database"
         block = await get_block_from_db(blockId, includeTransactions)
@@ -181,7 +181,7 @@ async def get_blocks(
     """
     response.headers["Cache-Control"] = "public, max-age=3"
 
-    rpc_client = await kaspad_rpc_client()
+    rpc_client = await karlsend_rpc_client()
     request = {"lowHash": lowHash, "includeBlocks": includeBlocks, "includeTransactions": includeTransactions}
     if rpc_client:
         try:
@@ -192,7 +192,7 @@ async def get_blocks(
         except Exception:
             return {"blockHashes": [], "blocks": []}
     else:
-        resp = await kaspad_client.request("getBlocksRequest", request)
+        resp = await karlsend_client.request("getBlocksRequest", request)
         return resp["getBlocksResponse"]
 
 
@@ -249,7 +249,7 @@ async def get_blocks_from_bluescore(
 
     add_cache_control(blueScore, None, response)
 
-    # If the blue score is not older than 1 day, try looking up hashes and finding the blocks in kaspad first
+    # If the blue score is not older than 1 day, try looking up hashes and finding the blocks in karlsend first
     if (current_blue_score_data["blue_score"] and current_blue_score_data["blue_score"] - blueScore) / BPS < 86400:
         async with async_session_blocks() as s:
             block_hashes = (await s.execute(select(Block.hash).where(Block.blue_score == blueScore))).scalars().all()
@@ -259,13 +259,13 @@ async def get_blocks_from_bluescore(
 
         result = []
         for block_hash in block_hashes:
-            block = await get_block_from_kaspad(block_hash, includeTransactions, False)
+            block = await get_block_from_karlsend(block_hash, includeTransactions, False)
             if block:
                 result.append(block)
         if result:
             return result
 
-    # Block hashes not found in kaspad, look up blocks in the db instead
+    # Block hashes not found in karlsend, look up blocks in the db instead
     async with async_session_blocks() as s:
         blocks = (await s.execute(block_join_query().where(Block.blue_score == blueScore))).all()
 
@@ -279,27 +279,27 @@ async def get_blocks_from_bluescore(
     return result
 
 
-async def get_block_from_kaspad(block_hash, include_transactions, include_color):
-    rpc_client = await kaspad_rpc_client()
+async def get_block_from_karlsend(block_hash, include_transactions, include_color):
+    rpc_client = await karlsend_rpc_client()
     request = {"hash": block_hash, "includeTransactions": include_transactions}
     if rpc_client:
         try:
             resp = await wait_for(rpc_client.get_block(request), 10)
             block = convert_to_legacy_block(resp.get("block", {}))
-            logging.debug(f"Found block in kaspad (wrpc): {block_hash}")
+            logging.debug(f"Found block in karlsend (wrpc): {block_hash}")
         except Exception:
             block = {}
     else:
-        resp = await kaspad_client.request("getBlockRequest", request)
+        resp = await karlsend_client.request("getBlockRequest", request)
         block = resp.get("getBlockResponse", {}).get("block", {})
-        logging.debug(f"Found block in kaspad (grpc): {block_hash}")
+        logging.debug(f"Found block in karlsend (grpc): {block_hash}")
     if not block.get("verboseData", {}).get("isHeaderOnly", True):
         block["extra"] = {}
         if include_color:
             if block["verboseData"]["isChainBlock"]:
                 block["extra"]["color"] = "blue"
             else:
-                block["extra"]["color"] = await get_block_color_from_kaspad(block["verboseData"]["hash"])
+                block["extra"]["color"] = await get_block_color_from_karlsend(block["verboseData"]["hash"])
         return block
 
 
@@ -335,8 +335,8 @@ async def get_block_from_db(block_hash, include_transactions):
     return map_block_from_db(block, is_chain_block, parents, children, transaction_ids, transactions)
 
 
-async def get_block_color_from_kaspad(block_hash):
-    rpc_client = await kaspad_rpc_client()
+async def get_block_color_from_karlsend(block_hash):
+    rpc_client = await karlsend_rpc_client()
     request = {"hash": block_hash}
     if rpc_client:
         try:
@@ -344,7 +344,7 @@ async def get_block_color_from_kaspad(block_hash):
         except Exception:
             resp = {}
     else:
-        resp = await kaspad_client.request("getCurrentBlockColorRequest", request)
+        resp = await karlsend_client.request("getCurrentBlockColorRequest", request)
         resp = resp.get("getCurrentBlockColorResponse", {})
     if resp.get("blue"):
         return "blue" if resp["blue"] is True else "red"

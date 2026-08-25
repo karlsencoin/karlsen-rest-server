@@ -5,8 +5,8 @@ from typing import List
 from fastapi import HTTPException
 from pydantic import BaseModel
 
-from kaspad.KaspadRpcClient import kaspad_rpc_client
-from server import app, kaspad_client
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
+from server import app, karlsend_client
 
 
 class AcceptedTransactionIdsModel(BaseModel):
@@ -27,14 +27,14 @@ class VscpResponse(BaseModel):
 async def get_virtual_selected_parent_chain_from_block(startHash: str, includeAcceptedTransactionIds: bool = True):
     """
     GetVirtualSelectedParentChainFromBlockRequestMessage requests the virtual selected parent chain from
-    some startHash to this kaspad's current virtual.
+    some startHash to this karlsend's current virtual.
     """
-    rpc_client = await kaspad_rpc_client()
+    rpc_client = await karlsend_rpc_client()
     request = {"startHash": startHash, "includeAcceptedTransactionIds": includeAcceptedTransactionIds}
     if rpc_client:
         return await wait_for(rpc_client.get_virtual_chain_from_block(request), 60)
     else:
-        resp = await kaspad_client.request("getVirtualChainFromBlockRequest", request)
+        resp = await karlsend_client.request("getVirtualChainFromBlockRequest", request)
         if resp.get("error"):
             raise HTTPException(500, resp["error"])
         return resp["getVirtualChainFromBlockResponse"]

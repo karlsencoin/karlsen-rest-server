@@ -5,12 +5,12 @@ from typing import List
 from fastapi import HTTPException
 from pydantic import BaseModel, Field
 
-from kaspad.KaspadRpcClient import kaspad_rpc_client
-from server import app, kaspad_client
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
+from server import app, karlsend_client
 
 
 class BlockdagResponse(BaseModel):
-    networkName: str = Field(..., example="kaspa-mainnet")
+    networkName: str = Field(..., example="karlsen-mainnet")
     blockCount: str = Field(..., example="260890")
     headerCount: str = Field(..., example="2131312")
     tipHashes: List[str] = Field(..., example=["78273854a739e3e379dfd34a262bbe922400d8e360e30e3f31228519a334350a"])
@@ -37,13 +37,13 @@ async def get_blockdag():
     """
     Get Karlsen BlockDAG information
     """
-    rpc_client = await kaspad_rpc_client()
+    rpc_client = await karlsend_rpc_client()
     if rpc_client:
         info = await wait_for(rpc_client.get_block_dag_info(), 10)
-        info["networkName"] = f"kaspa-{info['network']}"
+        info["networkName"] = f"karlsen-{info['network']}"
         return info
     else:
-        resp = await kaspad_client.request("getBlockDagInfoRequest")
+        resp = await karlsend_client.request("getBlockDagInfoRequest")
         if "error" in resp:
             raise HTTPException(500, resp["error"])
         return resp["getBlockDagInfoResponse"]

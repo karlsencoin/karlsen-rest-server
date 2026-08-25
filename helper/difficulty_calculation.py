@@ -1,5 +1,5 @@
 def from_compact_target_bits(bits):
-    # Translation of https://github.com/kaspanet/rusty-kaspa/blob/master/math/src/lib.rs
+    # Translation of https://github.com/karlsencoin/rusty-karlsen/blob/master/math/src/lib.rs
     unshifted_expt = bits >> 24
     if unshifted_expt <= 3:
         mant = (bits & 0xFFFFFF) >> (8 * (3 - unshifted_expt))
@@ -14,8 +14,8 @@ def from_compact_target_bits(bits):
 
 
 def bits_to_difficulty(bits):
-    # https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/constants.rs:
+    # https://github.com/karlsencoin/rusty-karlsen/blob/master/consensus/core/src/config/constants.rs:
     max_target = 2**255 - 1
-    # https://github.com/kaspanet/rusty-kaspa/blob/master/rpc/service/src/converter/consensus.rs:
+    # https://github.com/karlsencoin/rusty-karlsen/blob/master/rpc/service/src/converter/consensus.rs:
     target = from_compact_target_bits(bits)
     return max_target / target if target != 0 else float("inf")

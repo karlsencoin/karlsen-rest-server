@@ -7,7 +7,7 @@ from sqlalchemy import func, text
 from sqlalchemy.future import select
 from starlette.responses import Response
 
-from constants import ADDRESS_EXAMPLE, REGEX_KASPA_ADDRESS
+from constants import ADDRESS_EXAMPLE, REGEX_KARLSEN_ADDRESS
 from constants import USE_SCRIPT_FOR_ADDRESS
 from dbsession import async_session
 from endpoints import sql_db_only
@@ -33,7 +33,7 @@ class TransactionCount(BaseModel):
 async def get_transaction_count_for_address(
     response: Response,
     karlsen_address: str = Path(
-        alias="karlsenAddress", description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS
+        alias="karlsenAddress", description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KARLSEN_ADDRESS
     ),
 ):
     """

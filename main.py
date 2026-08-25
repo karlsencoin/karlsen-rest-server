@@ -39,12 +39,12 @@ from endpoints.get_virtual_chain import get_virtual_chain_transactions
 from endpoints.get_virtual_chain_blue_score import (
     get_virtual_selected_parent_blue_score,
 )
-from endpoints.kaspad_requests.submit_transaction_request import (
+from endpoints.karlsend_requests.submit_transaction_request import (
     submit_a_new_transaction,
 )
 from helper import get_kas_market_data
-from kaspad.KaspadRpcClient import kaspad_rpc_client
-from server import app, kaspad_client
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
+from server import app, karlsend_client
 
 IS_SQL_DB_CONFIGURED = os.getenv("SQL_URI") is not None
 
@@ -69,8 +69,8 @@ if os.getenv("VSPC_REQUEST") == "true":
 async def startup():
     await get_kas_market_data()
 
-    await kaspad_client.initialize_all()
-    await kaspad_rpc_client()
+    await karlsend_client.initialize_all()
+    await karlsend_rpc_client()
 
 
 @app.get("/", include_in_schema=False)

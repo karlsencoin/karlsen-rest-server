@@ -28,7 +28,7 @@ async def get_kas_market_data():
         async with aiohttp.ClientSession() as session:
             try:
                 _logger.debug("Querying CoinGecko mirror")
-                async with session.get("https://price.kaspa.ws/cg.json", timeout=10) as resp:
+                async with session.get("https://price.karlsencoin.org/cg.json", timeout=10) as resp:
                     if resp.status == 200:
                         CACHE = (await resp.json())["market_data"]
                         FLOOD_DETECTED = False
@@ -36,7 +36,7 @@ async def get_kas_market_data():
             except Exception:
                 pass  # Ignore and fall back
             _logger.info("Mirror failed, querying CoinGecko")
-            async with session.get("https://api.coingecko.com/api/v3/coins/kaspa", timeout=10) as resp:
+            async with session.get("https://api.coingecko.com/api/v3/coins/karlsen", timeout=10) as resp:
                 if resp.status == 200:
                     FLOOD_DETECTED = False
                     CACHE = (await resp.json())["market_data"]

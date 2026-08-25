@@ -104,3 +104,8 @@ class RPC(object):
             metadata,
             _registered_method=True,
         )
+
+# Karlsen aliases — note: gRPC method paths remain /protowire.KaspadDaemon/... (wire format)
+KarlsendDaemonStub = KaspadDaemonStub
+KarlsendDaemonServicer = KaspadDaemonServicer
+add_KarlsendDaemonServicer_to_server = add_KaspadDaemonServicer_to_server

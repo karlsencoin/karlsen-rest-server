@@ -8,7 +8,7 @@ from typing import List
 from pydantic import BaseModel
 from sqlalchemy import select
 from fastapi.responses import JSONResponse
-from kaspad.KaspadRpcClient import kaspad_rpc_client
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
 
 from constants import BPS, HEALTH_TOLERANCE_DOWN
 from dbsession import async_session_blocks, async_session
@@ -16,14 +16,14 @@ from endpoints.get_virtual_chain_blue_score import current_blue_score_data
 from models.Block import Block
 from models.Transaction import Transaction
 from models.TransactionAcceptance import TransactionAcceptance
-from server import app, kaspad_client
+from server import app, karlsend_client
 
 
 _logger = logging.getLogger(__name__)
 
 
 class KarlsendResponse(BaseModel):
-    kaspadHost: str | None
+    karlsendHost: str | None
     serverVersion: str = "0.12.6"
     isUtxoIndexed: bool = True
     isSynced: bool = True
@@ -40,7 +40,7 @@ class DBCheckStatus(BaseModel):
 
 
 class HealthResponse(BaseModel):
-    kaspadServers: List[KarlsendResponse]
+    karlsendServers: List[KarlsendResponse]
     database: DBCheckStatus
 
 
@@ -82,50 +82,50 @@ async def health_state():
     except Exception:
         db_check_status = DBCheckStatus(isSynced=False)
 
-    await kaspad_client.initialize_all()
-    kaspads = []
+    await karlsend_client.initialize_all()
+    karlsends = []
 
-    rpc_client = await kaspad_rpc_client()
+    rpc_client = await karlsend_rpc_client()
     if rpc_client:
-        kaspad = {
-            "kaspadHost": "wrpc",
+        karlsend = {
+            "karlsendHost": "wrpc",
             "isUtxoIndexed": False,
             "isSynced": False,
         }
         try:
             rpc_client_info = await wait_for(rpc_client.get_info(), 10)
-            kaspad["serverVersion"] = rpc_client_info["serverVersion"]
-            kaspad["isUtxoIndexed"] = rpc_client_info["isUtxoIndexed"]
-            kaspad["isSynced"] = rpc_client_info["isSynced"]
-            kaspad["p2pId"] = hashlib.sha256(rpc_client_info["p2pId"].encode()).hexdigest()
-            kaspad["blueScore"] = (await wait_for(rpc_client.get_sink_blue_score(), 10))["blueScore"]
+            karlsend["serverVersion"] = rpc_client_info["serverVersion"]
+            karlsend["isUtxoIndexed"] = rpc_client_info["isUtxoIndexed"]
+            karlsend["isSynced"] = rpc_client_info["isSynced"]
+            karlsend["p2pId"] = hashlib.sha256(rpc_client_info["p2pId"].encode()).hexdigest()
+            karlsend["blueScore"] = (await wait_for(rpc_client.get_sink_blue_score(), 10))["blueScore"]
         except Exception as err:
             _logger.error("Kaspad health check failed %s", err)
-        kaspads.append(kaspad)
+        karlsends.append(karlsend)
 
-    elif kaspad_client.kaspads:
-        for i, k in enumerate(kaspad_client.kaspads):
-            kaspad = {
-                "kaspadHost": f"KASPAD_HOST_{i + 1}",
+    elif karlsend_client.karlsends:
+        for i, k in enumerate(karlsend_client.karlsends):
+            karlsend = {
+                "karlsendHost": f"KARLSEND_HOST_{i + 1}",
                 "isUtxoIndexed": False,
                 "isSynced": False,
             }
             try:
-                kaspad["serverVersion"] = k.server_version
-                kaspad["isUtxoIndexed"] = k.is_utxo_indexed
-                kaspad["isSynced"] = k.is_synced
-                kaspad["p2pId"] = hashlib.sha256(k.p2p_id.encode()).hexdigest()
-                kaspad["blueScore"] = current_blue_score_node
+                karlsend["serverVersion"] = k.server_version
+                karlsend["isUtxoIndexed"] = k.is_utxo_indexed
+                karlsend["isSynced"] = k.is_synced
+                karlsend["p2pId"] = hashlib.sha256(k.p2p_id.encode()).hexdigest()
+                karlsend["blueScore"] = current_blue_score_node
             except Exception as err:
                 _logger.error("Kaspad health check failed %s", err)
-            kaspads.append(kaspad)
+            karlsends.append(karlsend)
 
     result = {
-        "kaspadServers": kaspads,
+        "karlsendServers": karlsends,
         "database": db_check_status.dict(),
     }
 
-    if not db_check_status.isSynced or not any(kaspad["isSynced"] for kaspad in kaspads):
+    if not db_check_status.isSynced or not any(karlsend["isSynced"] for karlsend in karlsends):
         return JSONResponse(status_code=503, content=result)
 
     return result

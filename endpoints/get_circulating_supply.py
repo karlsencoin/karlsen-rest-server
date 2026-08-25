@@ -5,9 +5,9 @@ from fastapi import HTTPException
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 
-from constants import MAX_SUPPLY_KAS, SOMPI_PER_KAS
-from kaspad.KaspadRpcClient import kaspad_rpc_client
-from server import app, kaspad_client
+from constants import MAX_SUPPLY_KLS, SOMPI_PER_KLS
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
+from server import app, karlsend_client
 
 
 class CoinSupplyResponse(BaseModel):
@@ -20,18 +20,18 @@ async def get_coinsupply():
     """
     Get $KAS coin supply information
     """
-    rpc_client = await kaspad_rpc_client()
+    rpc_client = await karlsend_rpc_client()
     if rpc_client:
         coin_supply = await wait_for(rpc_client.get_coin_supply(), 10)
     else:
-        resp = await kaspad_client.request("getCoinSupplyRequest")
+        resp = await karlsend_client.request("getCoinSupplyRequest")
         if resp.get("error"):
             raise HTTPException(500, resp["error"])
         coin_supply = resp["getCoinSupplyResponse"]
 
     return {
         "circulatingSupply": coin_supply["circulatingSompi"],
-        "maxSupply": MAX_SUPPLY_KAS * SOMPI_PER_KAS,
+        "maxSupply": MAX_SUPPLY_KLS * SOMPI_PER_KLS,
     }
 
 

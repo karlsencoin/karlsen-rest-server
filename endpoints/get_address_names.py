@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from sqlalchemy.future import select
 from starlette.responses import Response
 
-from constants import REGEX_KASPA_ADDRESS
+from constants import REGEX_KARLSEN_ADDRESS
 from dbsession import async_session
 from endpoints import sql_db_only
 from models.AddressKnown import AddressKnown
@@ -48,7 +48,7 @@ async def get_name_for_address(
     karlsen_address: str = Path(
         alias="karlsenAddress",
         description="Karlsen address as string e.g. karlsen:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkx9awp4e",
-        regex=REGEX_KASPA_ADDRESS,
+        regex=REGEX_KARLSEN_ADDRESS,
     ),
 ):
     """

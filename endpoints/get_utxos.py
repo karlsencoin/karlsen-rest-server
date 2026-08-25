@@ -8,9 +8,9 @@ from kaspa_script_address import to_script
 from pydantic import BaseModel
 from starlette.responses import Response
 
-from constants import REGEX_KASPA_ADDRESS, ADDRESS_EXAMPLE
-from kaspad.KaspadRpcClient import kaspad_rpc_client
-from server import app, kaspad_client
+from constants import REGEX_KARLSEN_ADDRESS, ADDRESS_EXAMPLE
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
+from server import app, karlsend_client
 
 
 class OutpointModel(BaseModel):
@@ -43,7 +43,7 @@ class UtxoResponse(BaseModel):
 )
 async def get_utxos_for_address(
     response: Response,
-    karlsenAddress: str = Path(description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KASPA_ADDRESS),
+    karlsenAddress: str = Path(description=f"Karlsen address as string e.g. {ADDRESS_EXAMPLE}", regex=REGEX_KARLSEN_ADDRESS),
 ):
     """
     Lists all open utxo for a given karlsen address
@@ -81,14 +81,14 @@ async def get_utxos_for_addresses(body: UtxoRequest):
         return []
 
     for karlsenAddress in body.addresses:
-        if not re.search(REGEX_KASPA_ADDRESS, karlsenAddress):
+        if not re.search(REGEX_KARLSEN_ADDRESS, karlsenAddress):
             raise HTTPException(status_code=400, detail=f"Invalid address: {karlsenAddress}")
 
     return await get_utxos(body.addresses)
 
 
 async def get_utxos(addresses):
-    rpc_client = await kaspad_rpc_client()
+    rpc_client = await karlsend_rpc_client()
     request = {"addresses": addresses}
     if rpc_client:
         utxos = await wait_for(rpc_client.get_utxos_by_addresses(request), 60)
@@ -98,7 +98,7 @@ async def get_utxos(addresses):
                 spk = "0" + spk
             utxo["utxoEntry"]["scriptPublicKey"] = {"scriptPublicKey": spk}
     else:
-        resp = await kaspad_client.request("getUtxosByAddressesRequest", request, timeout=60)
+        resp = await karlsend_client.request("getUtxosByAddressesRequest", request, timeout=60)
         if resp.get("error"):
             raise HTTPException(500, resp["error"])
         utxos = resp["getUtxosByAddressesResponse"]

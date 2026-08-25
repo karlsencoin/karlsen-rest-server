@@ -15,12 +15,12 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from constants import KASPAD_WRPC_URL
+from constants import KARLSEND_WRPC_URL
 from dbsession import async_session
 from helper.StrictRoute import StrictRoute
 from helper.LimitUploadSize import LimitUploadSize
-from kaspad.KaspadMultiClient import KaspadMultiClient
-from kaspad.KaspadRpcClient import kaspad_rpc_client
+from karlsend.KarlsendMultiClient import KarlsendMultiClient
+from karlsend.KarlsendRpcClient import karlsend_rpc_client
 
 fastapi.logger.logger.setLevel(logging.WARNING)
 
@@ -30,7 +30,7 @@ app = FastAPI(
     title="Karlsen REST-API server",
     description="REST-API server supporting block, tx and address search, using Karlsend and the indexer db.\n\n"
     "[https://github.com/karlsencoin/karlsen-rest-server](https://github.com/karlsencoin/karlsen-rest-server) "
-    "(fork of [kaspa-ng/kaspa-rest-server](https://github.com/kaspa-ng/kaspa-rest-server))",
+    "(fork of [karlsencoin/karlsen-rest-server](https://github.com/karlsencoin/karlsen-rest-server))",
     version=os.getenv("VERSION") or "dev",
     contact={"name": "lAmeR1 / supertypo"},
     license_info={"name": "MIT LICENSE"},
@@ -62,7 +62,7 @@ app.add_middleware(
 app.add_middleware(CacheControlMiddleware)
 
 
-class KaspadStatus(BaseModel):
+class KarlsendStatus(BaseModel):
     is_online: bool = False
     is_wrpc: bool = False
     server_version: Optional[str] = None
@@ -75,7 +75,7 @@ class DatabaseStatus(BaseModel):
 
 
 class PingResponse(BaseModel):
-    kaspad: KaspadStatus = KaspadStatus()
+    karlsend: KarlsendStatus = KarlsendStatus()
     database: DatabaseStatus = DatabaseStatus()
 
 
@@ -86,25 +86,25 @@ async def ping_server():
     """
     result = PingResponse()
 
-    rpc_client = await kaspad_rpc_client()
+    rpc_client = await karlsend_rpc_client()
     if rpc_client:
-        result.kaspad.is_wrpc = True
+        result.karlsend.is_wrpc = True
         try:
             info = await wait_for(rpc_client.get_info(), 10)
-            result.kaspad.is_online = True
-            result.kaspad.server_version = info["serverVersion"]
-            result.kaspad.is_utxo_indexed = info["isUtxoIndexed"]
-            result.kaspad.is_synced = info["isSynced"]
+            result.karlsend.is_online = True
+            result.karlsend.server_version = info["serverVersion"]
+            result.karlsend.is_utxo_indexed = info["isUtxoIndexed"]
+            result.karlsend.is_synced = info["isSynced"]
         except Exception as err:
             _logger.error(f"Kaspad health check failed {str(err)}")
 
-    elif kaspad_client.kaspads:
+    elif karlsend_client.karlsends:
         try:
-            info = await kaspad_client.kaspads[0].request("getInfoRequest")
-            result.kaspad.is_online = True
-            result.kaspad.server_version = info["getInfoResponse"]["serverVersion"]
-            result.kaspad.is_utxo_indexed = info["getInfoResponse"]["isUtxoIndexed"]
-            result.kaspad.is_synced = info["getInfoResponse"]["isSynced"]
+            info = await karlsend_client.karlsends[0].request("getInfoRequest")
+            result.karlsend.is_online = True
+            result.karlsend.server_version = info["getInfoResponse"]["serverVersion"]
+            result.karlsend.is_utxo_indexed = info["getInfoResponse"]["isUtxoIndexed"]
+            result.karlsend.is_synced = info["getInfoResponse"]["isSynced"]
         except Exception as err:
             _logger.error("Kaspad health check failed %s", err)
 
@@ -116,29 +116,29 @@ async def ping_server():
             except Exception as err:
                 _logger.error("Database health check failed %s", err)
 
-    if not result.database.is_online or not result.kaspad.is_synced:
+    if not result.database.is_online or not result.karlsend.is_synced:
         return JSONResponse(status_code=503, content=result.dict())
 
     return result
 
 
-kaspad_hosts = []
+karlsend_hosts = []
 
 for i in range(100):
     try:
-        kaspad_hosts.append(os.environ[f"KASPAD_HOST_{i + 1}"].strip())
+        karlsend_hosts.append(os.environ[f"KARLSEND_HOST_{i + 1}"].strip())
     except KeyError:
         break
 
-if not kaspad_hosts and not KASPAD_WRPC_URL:
-    raise Exception("Please set KASPAD_WRPC_URL or KASPAD_HOST_1 environment variable.")
+if not karlsend_hosts and not KARLSEND_WRPC_URL:
+    raise Exception("Please set KARLSEND_WRPC_URL or KARLSEND_HOST_1 environment variable.")
 
-kaspad_client = KaspadMultiClient(kaspad_hosts)
+karlsend_client = KarlsendMultiClient(karlsend_hosts)
 
 
 @app.exception_handler(Exception)
 async def unicorn_exception_handler(request: Request, exc: Exception):
-    await kaspad_client.initialize_all()
+    await karlsend_client.initialize_all()
     return JSONResponse(
         status_code=500,
         content={
@@ -153,9 +153,9 @@ async def periodical_blockdag():
     async def loop():
         while True:
             try:
-                await kaspad_client.initialize_all()
+                await karlsend_client.initialize_all()
             except Exception as e:
-                logging.exception(f"Error initializing kaspad_client: {e}")
+                logging.exception(f"Error initializing karlsend_client: {e}")
             await asyncio.sleep(60)
 
     asyncio.create_task(loop())
