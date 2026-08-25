@@ -1,4 +1,4 @@
-from kaspa_script_address import to_address
+from karlsend.karlsen_sdk import to_address
 from sqlalchemy import Column, BigInteger, SmallInteger
 
 from constants import ADDRESS_PREFIX

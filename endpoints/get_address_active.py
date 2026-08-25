@@ -2,7 +2,7 @@
 from typing import List
 
 from fastapi import HTTPException
-from kaspa_script_address import to_script, to_address
+from karlsend.karlsen_sdk import to_script, to_address
 from pydantic import BaseModel, Field
 from sqlalchemy import values, column, func
 from sqlalchemy.future import select

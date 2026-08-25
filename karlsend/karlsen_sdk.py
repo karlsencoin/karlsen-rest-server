@@ -9,3 +9,7 @@ from kaspa import (
     pay_to_address_script,
     address_from_script_public_key,
 )
+
+# kaspa_script_address is a low-level C extension; re-export here so application
+# code never imports it directly.
+from kaspa_script_address import to_address, to_script

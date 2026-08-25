@@ -1,7 +1,7 @@
 # encoding: utf-8
 import logging
 from fastapi import Path, HTTPException
-from kaspa_script_address import to_script
+from karlsend.karlsen_sdk import to_script
 from pydantic import BaseModel
 from sqlalchemy import func, text
 from sqlalchemy.future import select

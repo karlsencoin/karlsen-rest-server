@@ -2,7 +2,7 @@
 from typing import List
 
 from fastapi import Path, HTTPException
-from kaspa_script_address import to_script
+from karlsend.karlsen_sdk import to_script
 from pydantic import BaseModel
 from sqlalchemy.future import select
 from starlette.responses import Response

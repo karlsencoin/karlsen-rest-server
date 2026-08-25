@@ -1,6 +1,6 @@
 # encoding: utf-8
 import binascii
-from kaspa_script_address import to_address
+from karlsend.karlsen_sdk import to_address
 
 from constants import ADDRESS_PREFIX
 

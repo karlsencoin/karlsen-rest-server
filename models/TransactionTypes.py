@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from kaspa_script_address import to_address
+from karlsend.karlsen_sdk import to_address
 
 from constants import ADDRESS_PREFIX
 from helper.PublicKeyType import get_public_key_type

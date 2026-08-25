@@ -5,7 +5,7 @@ from enum import Enum
 from typing import List, Optional
 
 from fastapi import Path, HTTPException, Query
-from kaspa_script_address import to_address
+from karlsend.karlsen_sdk import to_address
 from pydantic import BaseModel, Field
 from sqlalchemy import exists, text
 from sqlalchemy.future import select

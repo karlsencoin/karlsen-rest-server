@@ -6,7 +6,7 @@ from typing import List
 
 from fastapi import HTTPException
 from fastapi.params import Path
-from kaspa_script_address import to_script
+from karlsend.karlsen_sdk import to_script
 from pydantic import BaseModel
 from sqlalchemy import and_
 from sqlalchemy import select

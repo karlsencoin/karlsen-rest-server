@@ -4,7 +4,7 @@ from asyncio import wait_for
 from typing import List
 
 from fastapi import HTTPException
-from kaspa_script_address import to_script
+from karlsend.karlsen_sdk import to_script
 from pydantic import BaseModel
 
 from constants import ADDRESS_EXAMPLE, REGEX_KARLSEN_ADDRESS

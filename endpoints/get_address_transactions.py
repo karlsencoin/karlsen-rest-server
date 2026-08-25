@@ -3,7 +3,7 @@ import time
 from typing import List, Optional
 
 from fastapi import Path, Query, HTTPException
-from kaspa_script_address import to_script
+from karlsend.karlsen_sdk import to_script
 from pydantic import BaseModel
 from sqlalchemy import or_, exists
 from sqlalchemy.future import select

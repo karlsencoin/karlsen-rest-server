@@ -4,7 +4,7 @@ from asyncio import wait_for
 from typing import List
 
 from fastapi import Path, HTTPException
-from kaspa_script_address import to_script
+from karlsend.karlsen_sdk import to_script
 from pydantic import BaseModel
 from starlette.responses import Response
 
